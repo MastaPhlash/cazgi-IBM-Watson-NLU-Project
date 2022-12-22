@@ -43,29 +43,28 @@ app.get("/",(req,res)=>{
 
 //The endpoint for the webserver ending with /url/emotion
 app.get("/url/emotion", (req,res) => {
-    // //Extract the url passed from the client through the request object
-         let urlToAnalyze = req.query.url
-        const analyzeParams = 
-        {
-            "url": urlToAnalyze,
-            "features": {
-                "keywords": {
-                    "emotion": true,
-                    "limit": 1
-                }
+    let urlToAnalyze = req.query.url
+    const analyzeParams = 
+    {
+        "url": urlToAnalyze,
+        "features": {
+            "keywords": {
+                "emotion": true,
+                "limit": 1
             }
         }
-     
-        const naturalLanguageUnderstanding = getNLUInstance();
-
-        naturalLanguageUnderstanding.analyze(analyzeParams)
-        .then(analysisResults => {
-            //Retrieve the emotion and return it as a formatted string
-            return res.send(analysisResults.result.keywords[0].emotion,null,2);
-        })
-        .catch(err => {
-            return res.send("Could not do desired operation "+err);
-        });
+    }
+    
+    const naturalLanguageUnderstanding = getNLUInstance();
+    
+    naturalLanguageUnderstanding.analyze(analyzeParams)
+    .then(analysisResults => {
+        //Retrieve the emotion and return it as a formatted string
+        return res.send(analysisResults.result.keywords[0].emotion,null,2);
+    })
+    .catch(err => {
+        return res.send("Could not do desired operation "+err);
+    });
 });
 
 //The endpoint for the webserver ending with /url/sentiment
@@ -81,9 +80,9 @@ app.get("/url/sentiment", (req,res) => {
             }
         }
     }
-
+    
     const naturalLanguageUnderstanding = getNLUInstance();
-
+    
     naturalLanguageUnderstanding.analyze(analyzeParams)
     .then(analysisResults => {
         //Retrieve the sentiment and return it as a formatted string
@@ -94,34 +93,35 @@ app.get("/url/sentiment", (req,res) => {
         return res.send("Could not do desired operation "+err);
     });
 });
+    
 
 //The endpoint for the webserver ending with /text/emotion
-app.get("/text/emotion", (req,res) => {
-    let textToAnalyze = req.query.text
+app.get("/text/emotion", (req,res) => {//Extract the url passed from the client through the request object
+    let urlToAnalyze = req.query.text
     const analyzeParams = 
-    {
-        "text": textToAnalyze,
-        "features": {
-            "keywords": {
-                "emotion": true,
-                "limit": 1
+        {
+            "url": urlToAnalyze,
+            "features": {
+                "keywords": {
+                                "emotion": true,
+                                "limit": 1
+                            }
             }
         }
-    }
-
-    const naturalLanguageUnderstanding = getNLUInstance();
-
-    naturalLanguageUnderstanding.analyze(analyzeParams)
-    .then(analysisResults => {
-        //Retrieve the emotion and return it as a formatted string
-
+     
+     const naturalLanguageUnderstanding = getNLUInstance();
+     
+     naturalLanguageUnderstanding.analyze(analyzeParams)
+     .then(analysisResults => {
+        //Please refer to the image to see the order of retrieval
         return res.send(analysisResults.result.keywords[0].emotion,null,2);
-    })
-    .catch(err => {
-        return res.send("Could not do desired operation "+err);
-    });
+     })
+     .catch(err => {
+     return res.send("Could not do desired operation "+err);
+     });
 });
 
+//The endpoint for the webserver ending with /url/sentiment
 app.get("/text/sentiment", (req,res) => {
     let textToAnalyze = req.query.text
     const analyzeParams = 
@@ -134,9 +134,9 @@ app.get("/text/sentiment", (req,res) => {
             }
         }
     }
-
+    
     const naturalLanguageUnderstanding = getNLUInstance();
-
+    
     naturalLanguageUnderstanding.analyze(analyzeParams)
     .then(analysisResults => {
         //Retrieve the sentiment and return it as a formatted string
@@ -147,6 +147,7 @@ app.get("/text/sentiment", (req,res) => {
         return res.send("Could not do desired operation "+err);
     });
 });
+
 
 let server = app.listen(8080, () => {
     console.log('Listening', server.address().port)
